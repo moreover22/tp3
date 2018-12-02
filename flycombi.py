@@ -24,9 +24,10 @@ def camino_mas(grafo, args):
 COMANDOS = { 'listar_operaciones' : listar_operaciones, 'camino_mas' : camino_mas }
 
 def flycombi(grafo):
-    # print(camino_minimo(grafo, "Lanus", "Shelbyville"))
+     # print(camino_minimo(grafo, "Lanus", "Shelbyville"))
+    print(dijkstra(grafo, "Lanus")) #, "Shelbyville"))
     # print(bfs(grafo, "Lanus"))
-    print(centralidad(grafo))
+    # print(centralidad(grafo))
     entrada = input()
     entrada = entrada.split(COMANDO_SEP);
     comando = entrada[CMD]
@@ -37,6 +38,28 @@ def flycombi(grafo):
 
 
 PRECIO = 2
+def dijkstra(grafo, origen):
+    dist = {}
+    padre = {}
+
+    dist[origen] = 0
+    q = Heap()
+
+    for v in grafo:
+        if v != origen:
+            dist[v] = inf
+        padre[v] = None
+        q.encolar(v, dist[v])
+
+    while not q.esta_vacio():
+        v = q.desencolar()
+        for w in grafo.adyacentes(v):
+            alt = dist[v] + int(grafo.peso(v, w)[PRECIO])
+            if alt < dist[v]:
+                dist[w] = alt
+                padre[w] = v
+                q.encolar(v, alt)
+        return padre, dist
 # NO FUNCIONA,
 def camino_minimo(grafo, origen, destino):
     dist = {}

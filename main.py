@@ -28,13 +28,21 @@ def grafo_archivo(file_vertices, file_aristas):
             aeropuertos[clave] = (clave, ciudad, lat, long)
             grafo.agregar_vertice(ciudad)
 
+        aux = set()
+
         for a in aristas:
             aer_i, aer_j, tiempo, precio, cant_vuelos = \
                 a.rstrip('\n').split(DELIMITADOR_CSV)
 
             ciudad_i = aeropuertos[aer_i][CIUDAD]
             ciudad_j = aeropuertos[aer_j][CIUDAD]
+            tupl_aux_1 = (aer_i, aer_j)
+            tupl_aux_2 = (aer_j, aer_i)
 
+            if tupl_aux_1 in aux or  tupl_aux_2 in aux:
+                print("Hay repetidos" + str(tupl_aux_1) )
+            aux.add(tupl_aux_1)
+            aux.add(tupl_aux_2)
             grafo.agregar_arista(ciudad_i, ciudad_j, (aer_i, aer_j, \
                 tiempo, precio, cant_vuelos))
 
@@ -49,10 +57,12 @@ def main(argv):
     """ Funcion principal """
     grafo, aeropuertos = cargar_archivos(argv)
     if not grafo: return
-
+    return
     # print(grafo)
     # for v in grafo:
         # print(v)
+    # for w in grafo.adyacentes('Gotica'):
+        # print(w)
     while(True):
         flycombi(grafo)
 
