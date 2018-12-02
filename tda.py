@@ -1,3 +1,9 @@
+#!/usr/bin/python
+"""
+Grupo: G14
+Alumnos: Mariotti, Franco y More, Agustin Emanuel
+Ayudante: Milena Marchese
+"""
 ELEMENTO = 0
 PRIORIDAD = 1
 class Heap:

@@ -24,7 +24,8 @@ def camino_mas(grafo, args):
 COMANDOS = { 'listar_operaciones' : listar_operaciones, 'camino_mas' : camino_mas }
 
 def flycombi(grafo):
-     # print(camino_minimo(grafo, "Lanus", "Shelbyville"))
+    print(camino_minimo(grafo, "Lanus", "Riverdale"))
+    print("dijkstra")
     print(dijkstra(grafo, "Lanus")) #, "Shelbyville"))
     # print(bfs(grafo, "Lanus"))
     # print(centralidad(grafo))
@@ -55,13 +56,14 @@ def dijkstra(grafo, origen):
         v = q.desencolar()
         for w in grafo.adyacentes(v):
             alt = dist[v] + int(grafo.peso(v, w)[PRECIO])
-            if alt < dist[v]:
+            if alt < dist[w]:
                 dist[w] = alt
                 padre[w] = v
                 q.encolar(v, alt)
-        return padre, dist
+    return padre, dist
+
 # NO FUNCIONA,
-def camino_minimo(grafo, origen, destino):
+def camino_minimo(grafo, origen, destino = None ):
     dist = {}
     padre = {}
     for v in grafo: dist[v] = inf
@@ -71,11 +73,11 @@ def camino_minimo(grafo, origen, destino):
     q.encolar(origen, dist[origen])
     while not q.esta_vacio():
         v = q.desencolar()
-        # if v == destino:
-            # return reconstruir_camino(origen, destino, padre)
+        if v == destino:
+            return reconstruir_camino(origen, destino, padre)
         for w in grafo.adyacentes(v):
+            print("ad " + w + " " + str(grafo.peso(v, w)))
             if dist[v] + int(grafo.peso(v, w)[PRECIO]) < dist[w]:
-                # print("ad " + w + " " + str(grafo.peso(v, w)))
                 dist[w] = dist[v] + int(grafo.peso(v, w)[PRECIO])
                 padre[w] = v
                 q.encolar(w, dist[w])

@@ -4,6 +4,7 @@ Grupo: G14
 Alumnos: Mariotti, Franco y More, Agustin Emanuel
 Ayudante: Milena Marchese
 """
+
 import sys
 from flycombi import *
 from grafo import Grafo
@@ -19,33 +20,23 @@ def grafo_archivo(file_vertices, file_aristas):
     """ Dado una ruta a archivos con info de vertices y de aristas,
     genera un grafo con sus relaciones. """
     grafo = Grafo(inv_arista)
-    with open(file_vertices, 'r') as vertices, \
-         open(file_aristas, 'r') as aristas:
+    with open(file_vertices) as vertices, \
+         open(file_aristas) as aristas:
 
         aeropuertos = {}
         for v in vertices:
             ciudad, clave, lat, long = v.rstrip('\n').split(DELIMITADOR_CSV)
             aeropuertos[clave] = (clave, ciudad, lat, long)
             grafo.agregar_vertice(ciudad)
-
-        aux = set()
-
         for a in aristas:
             aer_i, aer_j, tiempo, precio, cant_vuelos = \
                 a.rstrip('\n').split(DELIMITADOR_CSV)
 
             ciudad_i = aeropuertos[aer_i][CIUDAD]
             ciudad_j = aeropuertos[aer_j][CIUDAD]
-            tupl_aux_1 = (aer_i, aer_j)
-            tupl_aux_2 = (aer_j, aer_i)
 
-            if tupl_aux_1 in aux or  tupl_aux_2 in aux:
-                print("Hay repetidos" + str(tupl_aux_1) )
-            aux.add(tupl_aux_1)
-            aux.add(tupl_aux_2)
             grafo.agregar_arista(ciudad_i, ciudad_j, (aer_i, aer_j, \
                 tiempo, precio, cant_vuelos))
-
         return grafo, aeropuertos
 
 def cargar_archivos(archivos):
@@ -57,7 +48,8 @@ def main(argv):
     """ Funcion principal """
     grafo, aeropuertos = cargar_archivos(argv)
     if not grafo: return
-    return
+
+    # return
     # print(grafo)
     # for v in grafo:
         # print(v)
