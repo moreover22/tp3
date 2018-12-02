@@ -52,21 +52,30 @@ class Heap:
             self.downheap(pos_padre)
 
 class Cola:
+    """Representa a una cola, con operaciones de encolar y
+    desencolar. El primero en ser encolado es también el primero
+    en ser desencolado."""
     def __init__(self):
+        """ Crea una cola vacía. """
         self.items = []
 
     def encolar(self, elemento):
-        self.items.insert(0, elemento)
+        """ Encola el elemento. """
+        self.items.append(elemento)
 
     def desencolar(self):
+        """ Elimina el primer elemento de la cola. """
         if self.esta_vacia(): return
-        return self.items.pop()
+        return self.items.pop(0)
 
     def esta_vacia(self):
+        """ Devuelve True si la cola está vacia. """
         return len(self.items) == 0
 
 
 def swap(l, a, b):
+    """ Dada una lista l y dos posiciones de la misma (a, b)
+    Se intercambian los elementos del indice a y b """
     aux = l[a]
     l[a] = l[b]
     l[b] = aux

@@ -37,7 +37,7 @@ def grafo_archivo(file_vertices, file_aristas):
 
             grafo.agregar_arista(ciudad_i, ciudad_j, (aer_i, aer_j, \
                 tiempo, precio, cant_vuelos))
-        return grafo, aeropuertos
+    return grafo, aeropuertos
 
 def cargar_archivos(archivos):
     if len(archivos) > CANT_ARCHIVOS: return
