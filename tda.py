@@ -71,6 +71,26 @@ class Cola:
     def esta_vacia(self):
         """ Devuelve True si la cola está vacia. """
         return len(self.items) == 0
+class Pila:
+    """Representa a una pila, con operaciones de apilar y
+    desapilar. El primero en ser apilado es el ultimo
+    en ser desapilado."""
+    def __init__(self):
+        """ Crea una pila vacía. """
+        self.items = []
+
+    def apilar(self, elemento):
+        """ Apila el elemento. """
+        self.items.append(elemento)
+
+    def desapilar(self):
+        """ Elimina el ultimo elemento de la pila. """
+        if self.esta_vacia(): return
+        return self.items.pop()
+
+    def esta_vacia(self):
+        """ Devuelve True si la pila está vacia. """
+        return len(self.items) == 0
 
 
 def swap(l, a, b):

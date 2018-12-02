@@ -67,3 +67,23 @@ class Grafo:
 
     def obtener_vertice(self):
         return random(self.adyacencias.keys())
+
+    def matriz_adyacencia(self):
+        """ Devuelve la matriz de adyacencia del grafo
+        sin peso """
+
+        matriz = []
+        cant_v = len(self.adyacencias.keys())
+        indice = {}
+        i = 0
+        for v in self.adyacencias.keys():
+            matriz.append([0] * cant_v)
+            indice[v] = i
+            i += 1
+
+        for v in self.adyacencias.keys():
+            i = indice[v]
+            for a in self.adyacencias[v].keys():
+                j = indice[a]
+                matriz[i][j] = 1
+        return matriz
