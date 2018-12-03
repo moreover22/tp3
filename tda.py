@@ -7,34 +7,41 @@ Ayudante: Milena Marchese
 ELEMENTO = 0
 PRIORIDAD = 1
 class Heap:
+    """ Representa un heap de mínimos. Cuenta con las funciones de
+    encolar, desencolar, esta_vacio """
     def __init__(self):
+        """ Crea un heap vacío """
         self.items = []
         self.cant = 0
 
     def encolar(self, elemento, prioridad):
+        """ Encola un elemento con la prioridad indicada. """
         self.items.append((elemento, prioridad))
-        self.upheap(self.cant)
+        self._upheap(self.cant)
         self.cant += 1
 
     def desencolar(self):
+        """ Se desencola el elemento con menor prioridad
+        del heap. """
         if self.esta_vacio(): return None
         min = self.items[0][ELEMENTO]
         self.cant -= 1
         swap(self.items, 0, self.cant)
-        self.downheap(0)
+        self._downheap(0)
         return min
 
     def esta_vacio(self):
+        """ Devuelve True si el heap no tiene más elementos. """
         return self.cant == 0
 
-    def upheap(self, i):
+    def _upheap(self, i):
         if i <= 0: return
         padre = (i - 1) // 2
         if self.items[i][PRIORIDAD] < self.items[padre][PRIORIDAD]:
             swap(self.items, i, padre)
-            self.upheap(padre)
+            self._upheap(padre)
 
-    def downheap(self, i):
+    def _downheap(self, i):
         if i >= self.cant: return
         pos_padre = i
         pos_hijo_izq = (i * 2) + 1
@@ -49,12 +56,13 @@ class Heap:
 
         if pos_padre != i:
             swap(self.items, i, pos_padre)
-            self.downheap(pos_padre)
+            self._downheap(pos_padre)
 
 class Cola:
     """Representa a una cola, con operaciones de encolar y
     desencolar. El primero en ser encolado es también el primero
     en ser desencolado."""
+    
     def __init__(self):
         """ Crea una cola vacía. """
         self.items = []
