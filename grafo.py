@@ -7,11 +7,12 @@ Ayudante: Milena Marchese
 from random import random
 
 class Grafo:
-    """ Representa un grafo no dirigido pesado """
+    """ Representa un grafo """
 
-    def __init__(self, inv_arista = None):
+    def __init__(self, dirigido = False, inv_arista = None):
         self.adyacencias = {}
         self.inv_arista = inv_arista
+        self.dirigido = dirigido
 
     def __str__(self):
         """ Para pruebas """
@@ -33,13 +34,13 @@ class Grafo:
         for v in self.adyacencias.keys():
             if not self.estan_conectados(v, vertice): continue
             sacar_arista(self, v, vertice)
-
         self.adyacencias.pop(vertice)
 
-    def agregar_arista(self, vertice_i, vertice_j, costo):
+    def agregar_arista(self, vertice_i, vertice_j, costo = 1):
         if not self._pertenecen(vertice_i, vertice_j): return
 
         self.adyacencias[vertice_i][vertice_j] = costo
+        if not self.dirigido: return
         costo_j = costo
         if self.inv_arista:
             costo_j = self.inv_arista(costo)
@@ -49,13 +50,15 @@ class Grafo:
     def sacar_arista(self, vertice_i, vertice_j):
         if not self._pertenecen(vertice_i, vertice_j): return
         self.adyacencias[vertice_i].pop(vertice_j)
-        self.adyacencias[vertice_j].pop(vertice_i)
+        if self.dirigido:
+            self.adyacencias[vertice_j].pop(vertice_i)
 
 
 
     def estan_conectados(self, vertice_i, vertice_j):
         return self._pertenecen(vertice_i, vertice_j) and \
-            vertice_j in self.adyacencias[vertice_i]
+            (vertice_j in self.adyacencias[vertice_i] or \
+             vertice_i in self.adyacencias[vertice_j])  
 
     def adyacentes(self, vertice):
         if vertice not in self.adyacencias: return
