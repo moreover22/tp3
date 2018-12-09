@@ -9,10 +9,11 @@ PRIORIDAD = 1
 class Heap:
     """ Representa un heap de mínimos. Cuenta con las funciones de
     encolar, desencolar, esta_vacio """
-    def __init__(self):
+    def __init__(self,cmp=None):
         """ Crea un heap vacío """
         self.items = []
         self.cant = 0
+        self.cmp=cmp
 
     def encolar(self, elemento, prioridad):
         """ Encola un elemento con la prioridad indicada. """

@@ -59,12 +59,11 @@ def centralidad_aprox(grafo,n):
 			else visitados[vecino]+=1
 			q.encolar((vecino,pesos[vecino]))
 			origen=vecino
-		vertices_centrales=[]
-		for _ in range(0,n):
-			vertices_centrales.append(q.desencolar())
+	vertices_centrales=[]
+	for _ in range(0,n):
+		vertices_centrales.append(q.desencolar())
 			
-		return vertices_centrales
-			
+	return vertices_centrales
 	
 def recorrer_n_vertices(grafo, origen, n):
     """ Dado un grafo y un vertice de origen, la función de vuelve

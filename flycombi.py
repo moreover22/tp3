@@ -11,6 +11,7 @@ CMD = 0
 ARGS = 1
 ARGS_CAMINO_MAS = 3
 MODO_CAMINO_MAS = {"rapido" : 2, "barato" : 3}
+ARGS_CAMINO_ESCALAS	2
 VACACIONES_ARGS = 2
 ORIGEN = 0
 DESTINO = 1
@@ -76,7 +77,11 @@ def camino_mas(grafo, args):
     mostrar_recorrido(camino_minimo(grafo, origen, MODO_CAMINO_MAS[modo],
         destino, reconstruir_camino))
 
-
+def camino_escalas(grafo,args):
+	if len(args) != ARGS_CAMINO_MAS: return
+	origen, destino = args
+	padres,orden=bfs(grafo,origen,destino)
+	mostrar_recorrido(reconstruir_camino(grafo,origen,destino,padres))
 
 def vacaciones(grafo, args):
     """ Dado un grafo ya inicializado y la lista args con los siguientes
