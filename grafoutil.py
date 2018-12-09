@@ -39,19 +39,21 @@ def vertice_aleatorio(pesos):
         if acum + peso_arista >= rand:
             return vertice
         acum += peso_arista    
-   
+
+def obtener_pesos_vecinos(vertice_central,vecinos):
+	return {vecino:grafo.peso(origen,vecino) for vecino in vecinos}
+
+  
 def centralidad_aprox(grafo,n):
 	for _ in range(0,CANTIDAD_DE_RECORRIDOS):
 		origen=obtener_vertice();
-		
 		visitados={}
 		pesos={}
 		visitados[origen]=1
 		q=Heap()
 		for i in range(0,LARGO_RECORRIDO):
 			vecinos=grafo.adyacentes(origen)
-			for vecino in vecinos:
-				pesos[vecino]=grafo.peso(origen,vecino)
+			pesos=obtener_pesos_vecinos(vecinos)
 			vecino=vertice_aleatorio(pesos)
 			if(vecino not in visitados): visitados[vecino]=1
 			else visitados[vecino]+=1
