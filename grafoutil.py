@@ -10,6 +10,8 @@ from tda import Heap, Cola, Pila
 
 ORIGEN = 0
 DESTINO = 1
+CANTIDAD_DE_RECORRIDOS=10
+LARGO_RECORRIDO=20
 
 def centralidad(grafo):
     """ Devuelve un diccionario donde las claves son
@@ -27,7 +29,40 @@ def centralidad(grafo):
                 cent[actual] += 1
                 actual = padre[actual]
     return cent
-
+    
+def vertice_aleatorio(pesos):
+    #Pesos es un diccionario de pesos, clave vértice vecino, valor el peso.
+    total = sum(pesos.values())
+    rand = random.uniform(0, total)
+    acum = 0
+    for vertice, peso_arista in pesos.items():
+        if acum + peso_arista >= rand:
+            return vertice
+        acum += peso_arista    
+   
+def centralidad_aprox(grafo,n):
+	for _ in range(0,CANTIDAD_DE_RECORRIDOS):
+		origen=obtener_vertice();
+		vecinos=grafo.adyacentes(origen)
+		visitados={}
+		pesos={}
+		##for vecino in vecinos:
+		##	pesos[vecino]=grafo.peso(origen,vecino)
+		visitados[origen]=1
+		q=Heap()
+		for i in range(0,LARGO_RECORRIDO):
+			vecino=vertice_aleatorio(pesos);
+			if(vecino not in visitados): visitados[vecino]=1
+			else visitados[vecino]+=1
+			q.encolar((vecino,pesos[vecino]))
+			origen=vecino
+		vertices_centrales=[]
+		for _ in range(0,n):
+			vertices_centrales.append(q.desencolar())
+			
+		return vertices_centrales
+			
+	
 def recorrer_n_vertices(grafo, origen, n):
     """ Dado un grafo y un vertice de origen, la función de vuelve
     un recorrido desde el origen hasta el origen pasando por n ciudades
