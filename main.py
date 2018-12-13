@@ -14,7 +14,6 @@ def main(argv):
     fc = FlyCombi()
     fc.cargar_archivos(argv)
     ultimo_comando = True
-
     while(ultimo_comando):
         try:
             ultimo_comando = flycombi(fc, ultimo_comando)

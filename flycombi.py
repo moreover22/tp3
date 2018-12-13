@@ -14,13 +14,13 @@ SEP_RECORRIDO = " -> "
 CMD = 0
 ARGS = 1
 ARGS_CAMINO_MAS = 3
-MODO_CAMINO_MAS = {"rapido" : 2, "barato" : 3}
+MODO_CAMINO_MAS = {"rapido" : 2  , "barato" : 3}
 ARGS_CAMINO_ESCALAS = 2
 VACACIONES_ARGS = 2
 ORIGEN = 0
 DESTINO = 1
 CANT_ARCHIVOS = 2
-CIUDAD = 1
+CIUDAD = 0
 CETRALIDAD_ARGS = 1
 CENTRALIDAD_APROX_ARGS = 1
 EXPORTAR_KML = 'exportar_kml'
@@ -60,10 +60,10 @@ def camino_mas(flyCombi, args):
         destino, reconstruir_camino))
 
 def camino_escalas(grafo,args):
-	if len(args) != ARGS_CAMINO_MAS: return
-	origen, destino = args
-	padres,orden = bfs(grafo,origen,destino)
-	return mostrar_recorrido(reconstruir_camino(grafo,origen,destino,padres))
+    if len(args) != ARGS_CAMINO_MAS: return
+    origen, destino = args
+    padres,orden = bfs(grafo,origen,destino)
+    return mostrar_recorrido(reconstruir_camino(grafo,origen,destino,padres))
 
 def vacaciones(flyCombi, args):
     """ Dado un grafo ya inicializado y la lista args con los siguientes
@@ -84,6 +84,7 @@ def vacaciones(flyCombi, args):
     mostrar_recorrido(recorrido)
 
 def _centralidad(flyCombi, args):
+    return
     if len(args) != CETRALIDAD_ARGS: return
     grafo = flyCombi.get_grafo_aeropuertos()
     n = int(args[0])
@@ -157,6 +158,8 @@ COMANDOS = {'listar_operaciones' : listar_operaciones,
             }
 
 def flycombi(flyCombi, ultimo_comando):
+    # print(flyCombi.get_grafo_ciudades())
+
     entrada = input()
     entrada = entrada.split(COMANDO_SEP);
     comando = entrada[CMD]
@@ -170,7 +173,6 @@ def flycombi(flyCombi, ultimo_comando):
          return COMANDOS[comando](flyCombi, args)
 
 class FlyCombi:
-
     def __init__(self):
         self.grafo_ciudades = Grafo(True, inv_arista)
         self.grafo_aeropuertos = Grafo(True)
@@ -199,7 +201,7 @@ class FlyCombi:
 
             for v in vertices:
                 ciudad, clave, lat, long = v.rstrip('\n').split(DELIMITADOR_CSV)
-                self.aeropuertos[clave] = (clave, ciudad, lat, long)
+                self.aeropuertos[clave] = (ciudad, lat, long)
                 self.grafo_aeropuertos.agregar_vertice(clave)
                 self.grafo_ciudades.agregar_vertice(ciudad)
             for a in aristas:
@@ -208,7 +210,6 @@ class FlyCombi:
 
                 ciudad_i = self.aeropuertos[aer_i][CIUDAD]
                 ciudad_j = self.aeropuertos[aer_j][CIUDAD]
-
                 self.grafo_aeropuertos.agregar_arista(aer_i, aer_j, (tiempo, \
                 precio, cant_vuelos))
 

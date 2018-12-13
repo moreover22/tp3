@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
 """
 Grupo: G14
 Alumnos: Mariotti, Franco y More, Agustin Emanuel
@@ -8,14 +7,16 @@ Ayudante: Milena Marchese
 """
 ELEMENTO = 0
 PRIORIDAD = 1
+def cmpFunc(a, b):
+    return a - b
 class Heap:
     """ Representa un heap de mínimos. Cuenta con las funciones de
     encolar, desencolar, esta_vacio """
-    def __init__(self,cmp=None):
+    def __init__(self, cmp = cmpFunc):
         """ Crea un heap vacío """
         self.items = []
         self.cant = 0
-        self.cmp=cmp
+        self.cmp = cmp
 
     def encolar(self, elemento, prioridad):
         """ Encola un elemento con la prioridad indicada. """
@@ -30,6 +31,7 @@ class Heap:
         min = self.items[0][ELEMENTO]
         self.cant -= 1
         swap(self.items, 0, self.cant)
+        self.items.pop()
         self._downheap(0)
         return min
 
@@ -40,7 +42,7 @@ class Heap:
     def _upheap(self, i):
         if i <= 0: return
         padre = (i - 1) // 2
-        if self.items[i][PRIORIDAD] < self.items[padre][PRIORIDAD]:
+        if self.cmp(self.items[i][PRIORIDAD], self.items[padre][PRIORIDAD]) < 0:
             swap(self.items, i, padre)
             self._upheap(padre)
 
@@ -51,10 +53,12 @@ class Heap:
         pos_hijo_der = (i * 2) + 2
 
         if pos_hijo_izq < self.cant and \
-            self.items[pos_padre][PRIORIDAD] > self.items[pos_hijo_izq][PRIORIDAD]:
+            self.cmp(self.items[pos_padre][PRIORIDAD], \
+            self.items[pos_hijo_izq][PRIORIDAD]) > 0:
             pos_padre = pos_hijo_izq
         if pos_hijo_der < self.cant and \
-            self.items[pos_padre][PRIORIDAD] > self.items[pos_hijo_der][PRIORIDAD]:
+            self.cmp(self.items[pos_padre][PRIORIDAD], \
+            self.items[pos_hijo_der][PRIORIDAD]) > 0:
             pos_padre = pos_hijo_der
 
         if pos_padre != i:

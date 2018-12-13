@@ -96,16 +96,15 @@ def reconstruir_camino(grafo, origen, destino, padres, vuelve = False):
     aeropuerto de vuelta. """
     camino = []
     v = destino
+
     if vuelve:
         camino.append(grafo.peso(destino, origen)[DESTINO])
-    peso = grafo.peso(v, padres[v])
-    if not peso: return
-    camino.append(peso[ORIGEN])
-    while v != origen:
-        if not peso: return
-        camino.append(peso[DESTINO])
+    peso = grafo.peso(padres[v], v)
+    camino.append(peso[DESTINO])
+    while peso:
+        camino.append(peso[ORIGEN])
         v = padres[v]
-        peso = grafo.peso(v, padres[v])
+        peso = grafo.peso(padres[v], v)
     camino.reverse()
     return camino
 
@@ -155,7 +154,7 @@ def centralidad(grafo):
             cent[w] += cent_aux[w]
     return cent
 
-def _camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
+def camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
     dist = {}
     padre = {}
     for v in grafo: dist[v] = inf
@@ -166,6 +165,7 @@ def _camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir =
     while not q.esta_vacio():
         v = q.desencolar()
         if v == destino: return f_reconstruir(grafo, origen, destino, padre)
+        print(v, grafo.adyacentes(v))
         for w in grafo.adyacentes(v):
             alt = dist[v] + int(grafo.peso(v, w)[parametro])
 
@@ -173,30 +173,46 @@ def _camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir =
                 dist[w] = alt
                 padre[w] = v
                 q.encolar(w, dist[w])
+
+    # if destino: return f_reconstruir(grafo, origen, destino, padre)
+
     return padre, dist
 
 
-def camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
-    if not origen in grafo: return
+def _camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
     dist = {}
     padre = {}
+    visitados = set()
 
-    dist[origen] = 0
     q = Heap()
+    llego = False
+    for v in grafo: dist[v] = inf
 
-    for v in grafo:
-        if v != origen:
-            dist[v] = inf
-        padre[v] = None
-        q.encolar(v, dist[v])
+    padre[origen] = None
+    dist[origen] = 0
 
+    q.encolar(origen, dist[origen])
+    visitados.add(origen)
     while not q.esta_vacio():
         v = q.desencolar()
+        visitados.remove(v)
+        if v == destino:
+            llego = True
+            break
         for w in grafo.adyacentes(v):
             alt = dist[v] + int(grafo.peso(v, w)[parametro])
             if alt < dist[w]:
                 dist[w] = alt
                 padre[w] = v
-
-    if destino: return f_reconstruir(grafo, origen, destino, padre)
+                if not w in visitados:
+                    q.encolar(w, alt)
+                    visitados.add(w)
+    if llego: return f_reconstruir(grafo, origen, destino, padre)
     return padre, dist
+
+def ___camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
+    visitados = set()
+    dist = {}
+    padre
+    for v in grafo:
+        pass
