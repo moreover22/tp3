@@ -155,7 +155,7 @@ def centralidad(grafo):
             cent[w] += cent_aux[w]
     return cent
 
-def camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
+def _camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
     dist = {}
     padre = {}
     for v in grafo: dist[v] = inf
@@ -176,7 +176,7 @@ def camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = 
     return padre, dist
 
 
-def _camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
+def camino_minimo(grafo, origen, parametro = 0, destino = None, f_reconstruir = None):
     if not origen in grafo: return
     dist = {}
     padre = {}

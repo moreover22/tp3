@@ -1,0 +1,22 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+        <kml xmlns="http://www.opengis.net/kml/2.2">
+        <Document>
+        <name>KML TP3</name>
+  <Placemark>
+			<name>LGA</name>
+			<Point>
+				<coordinates>40.77724, -73.87261</coordinates>
+			</Point>
+		    </Placemark>
+ <Placemark>
+			<name>ATL</name>
+			<Point>
+				<coordinates>33.64044, -84.42694</coordinates>
+			</Point>
+		    </Placemark>
+<Placemark>
+			<LineString>
+				<coordinates>40.77724, -73.87261 33.64044, -84.42694</coordinates>
+			      </LineString>
+		     </Placemark> </Document>
+        </kml>
