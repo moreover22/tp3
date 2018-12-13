@@ -1,10 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 """
 Grupo: G14
 Alumnos: Mariotti, Franco y More, Agustin Emanuel
 Ayudante: Milena Marchese
 """
-from random import random
+from random import random, choice
 
 class Grafo:
     """
@@ -57,7 +58,7 @@ class Grafo:
         if not self._pertenecen(vertice_i, vertice_j): return
 
         self.adyacencias[vertice_i][vertice_j] = costo
-        if not self.dirigido: return
+        if self.dirigido: return
         costo_j = costo
         if self.inv_arista:
             costo_j = self.inv_arista(costo)
@@ -95,7 +96,7 @@ class Grafo:
 
     def obtener_vertice(self):
         """ Devuelve un vertice aleatorio del grafo. """
-        return random(self.adyacencias.keys())
+        return choice(list(self.adyacencias.keys()))
 
     def matriz_adyacencia(self):
         """ Devuelve la matriz de adyacencia del grafo

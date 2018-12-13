@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 """
 Grupo: G14
 Alumnos: Mariotti, Franco y More, Agustin Emanuel
@@ -10,10 +11,11 @@ from flycombi import *
 
 def main(argv):
     """ Funcion principal """
-    grafo, aeropuertos = cargar_archivos(argv)
-    if not grafo: return
+    fc = FlyCombi()
+    fc.cargar_archivos(argv)
     while(True):
-        flycombi(grafo)
+        if not flycombi(fc):
+            break
 
 if __name__ == '__main__':
     main(sys.argv[1:])

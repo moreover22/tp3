@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 """
 Grupo: G14
 Alumnos: Mariotti, Franco y More, Agustin Emanuel
@@ -63,7 +65,7 @@ class Cola:
     """Representa a una cola, con operaciones de encolar y
     desencolar. El primero en ser encolado es también el primero
     en ser desencolado."""
-    
+
     def __init__(self):
         """ Crea una cola vacía. """
         self.items = []
