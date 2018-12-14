@@ -7,16 +7,17 @@ Ayudante: Milena Marchese
 """
 ELEMENTO = 0
 PRIORIDAD = 1
-def cmpFunc(a, b):
+def cmpFunc(a, b, extra):
     return a - b
 class Heap:
     """ Representa un heap de mínimos. Cuenta con las funciones de
     encolar, desencolar, esta_vacio """
-    def __init__(self, cmp = cmpFunc):
+    def __init__(self, cmp = cmpFunc, extra = None):
         """ Crea un heap vacío """
         self.items = []
         self.cant = 0
         self.cmp = cmp
+        self.extra = extra
 
     def encolar(self, elemento, prioridad):
         """ Encola un elemento con la prioridad indicada. """
@@ -42,7 +43,8 @@ class Heap:
     def _upheap(self, i):
         if i <= 0: return
         padre = (i - 1) // 2
-        if self.cmp(self.items[i][PRIORIDAD], self.items[padre][PRIORIDAD]) < 0:
+        if self.cmp(self.items[i][PRIORIDAD], self.items[padre][PRIORIDAD],
+        self.extra) < 0:
             swap(self.items, i, padre)
             self._upheap(padre)
 
@@ -54,11 +56,11 @@ class Heap:
 
         if pos_hijo_izq < self.cant and \
             self.cmp(self.items[pos_padre][PRIORIDAD], \
-            self.items[pos_hijo_izq][PRIORIDAD]) > 0:
+            self.items[pos_hijo_izq][PRIORIDAD], self.extra) > 0:
             pos_padre = pos_hijo_izq
         if pos_hijo_der < self.cant and \
             self.cmp(self.items[pos_padre][PRIORIDAD], \
-            self.items[pos_hijo_der][PRIORIDAD]) > 0:
+            self.items[pos_hijo_der][PRIORIDAD], self.extra) > 0:
             pos_padre = pos_hijo_der
 
         if pos_padre != i:

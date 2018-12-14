@@ -98,6 +98,13 @@ class Grafo:
         """ Devuelve un vertice aleatorio del grafo. """
         return choice(list(self.adyacencias.keys()))
 
+    def agregar_vertices(self, vertices):
+        for v in vertices:
+            self.agregar_vertice(v)
+    def obtener_vertices(self):
+        return list(self.adyacencias.keys())
+
+
     def matriz_adyacencia(self):
         """ Devuelve la matriz de adyacencia del grafo
         sin peso """

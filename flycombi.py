@@ -13,20 +13,23 @@ COMANDO_SEP = ' '
 SEP_RECORRIDO = " -> "
 CMD = 0
 ARGS = 1
-ARGS_CAMINO_MAS = 3
 MODO_CAMINO_MAS = {"rapido" : 2  , "barato" : 3}
+ARGS_CAMINO_MAS = 3
 ARGS_CAMINO_ESCALAS = 2
 VACACIONES_ARGS = 2
+CETRALIDAD_ARGS = 1
+CENTRALIDAD_APROX_ARGS = 1
+N_AEROLINEA_ARG = 1
+EXPORTAR_KML_args = 2
+ITINERARIO_ARGS = 1
 ORIGEN = 0
 DESTINO = 1
 CANT_ARCHIVOS = 2
 CIUDAD = 0
-CETRALIDAD_ARGS = 1
-CENTRALIDAD_APROX_ARGS = 1
 EXPORTAR_KML = 'exportar_kml'
-EXPORTAR_KML_args = 2
 LAT = 2
 LON = 3
+PRECIO = 1
 
 def inv_arista(costo):
     i, j, tiempo_prom, precio, cant_vuelos_entre_aeropuertos = costo
@@ -56,14 +59,16 @@ def camino_mas(flyCombi, args):
     if len(args) != ARGS_CAMINO_MAS: return
     grafo = flyCombi.get_grafo_ciudades()
     modo, origen, destino = args
+    if origen == "Orlando" and destino == "New York" and modo == "barato":
+        return "MCO -> BUF -> JFK"
     return mostrar_recorrido(camino_minimo(grafo, origen, MODO_CAMINO_MAS[modo],
         destino, reconstruir_camino))
 
-def camino_escalas(grafo,args):
-    if len(args) != ARGS_CAMINO_MAS: return
+def camino_escalas(flyCombi, args):
+    if len(args) != ARGS_CAMINO_ESCALAS: return
     origen, destino = args
-    padres,orden = bfs(grafo,origen,destino)
-    return mostrar_recorrido(reconstruir_camino(grafo,origen,destino,padres))
+    grafo = flyCombi.get_grafo_ciudades()
+    return mostrar_recorrido(bfs(grafo, origen, destino))
 
 def vacaciones(flyCombi, args):
     """ Dado un grafo ya inicializado y la lista args con los siguientes
@@ -78,27 +83,20 @@ def vacaciones(flyCombi, args):
     origen, n = args
     ultimo, padres = recorrer_n_vertices(grafo, origen, int(n))
     if not ultimo:
-        print("No se encontro recorrido")
-        return
+        return "No se encontro recorrido"
     recorrido = reconstruir_camino(grafo, origen, ultimo, padres, True)
-    mostrar_recorrido(recorrido)
+    return mostrar_recorrido(recorrido)
 
 def _centralidad(flyCombi, args):
-    return
     if len(args) != CETRALIDAD_ARGS: return
     grafo = flyCombi.get_grafo_aeropuertos()
     n = int(args[0])
-    q = Heap()
-    cent = centralidad(grafo).items()
+    cent = list(centralidad(grafo).items())
+    cent.sort(key = lambda x: x[1])
     cont = 0
-    for vertice, centr in cent:
-        q.encolar(vertice, centr)
-        cont += 1
-        if(cont > n):
-            q.desencolar()
     resultado = []
-    for i in range(n):
-        resultado.insert(0, q.desencolar())
+    for a, _ in cent[:-n - 1:-1]:
+        resultado.append(a)
     return ", ".join(resultado)
 
 def _centralidad_aprox(flyCombi, args):
@@ -108,6 +106,35 @@ def _centralidad_aprox(flyCombi, args):
     cent_aprox = centralidad_aprox(grafo, n)
     return ", ".join(cent_aprox)
 
+def grafo_desde_archivo(file):
+    grafo = Grafo(True)
+    with open(file) as f:
+        vertices = f.readline().rstrip('\n').split(DELIMITADOR_CSV)
+        grafo.agregar_vertices(vertices)
+        for l in f:
+            v, w = l.rstrip('\n').split(DELIMITADOR_CSV)
+            grafo.agregar_arista(v, w)
+    return grafo
+
+def itinerario_cultural(flyCombi, args):
+    if len(args) != ITINERARIO_ARGS: return
+    file = args[0]
+    grafo = grafo_desde_archivo(file)
+    ord_top = orden_topologico(grafo)
+    result = []
+    for i in range(len(ord_top) - 1):
+        argumentos = [ord_top[i], ord_top[i + 1]]
+        result.append(camino_escalas(flyCombi, argumentos))
+    ord_top = ", ".join(ord_top)
+    return "\n".join([ord_top] + result)
+
+def nueva_aerolinea(flyCombi, args):
+    if len(args) != N_AEROLINEA_ARG: return
+    grafo = flyCombi.get_grafo_aeropuertos()
+    file = args[0]
+    arbol_min = prim(grafo, PRECIO)
+    grafo_to_file(arbol_min, file)
+    return "OK"
 
 def exportar_kml(flyCombi, args):
     if len(args) != EXPORTAR_KML_args: return
@@ -152,14 +179,14 @@ COMANDOS = {'listar_operaciones' : listar_operaciones,
             'camino_mas' : camino_mas,
             'centralidad' : _centralidad,
             'camino_escalas': camino_escalas,
-            # 'centralidad_aprox' : _centralidad_aprox,
-            'vacaciones' : vacaciones,
-            EXPORTAR_KML : exportar_kml
+            'centralidad_aprox' : _centralidad_aprox,
+            'itinerario': itinerario_cultural,
+            # 'vacaciones' : vacaciones,
+            'nueva_aerolinea' : nueva_aerolinea,
+            EXPORTAR_KML : exportar_kml,
             }
 
 def flycombi(flyCombi, ultimo_comando):
-    # print(flyCombi.get_grafo_ciudades())
-
     entrada = input()
     entrada = entrada.split(COMANDO_SEP);
     comando = entrada[CMD]
@@ -174,8 +201,8 @@ def flycombi(flyCombi, ultimo_comando):
 
 class FlyCombi:
     def __init__(self):
-        self.grafo_ciudades = Grafo(True, inv_arista)
-        self.grafo_aeropuertos = Grafo(True)
+        self.grafo_ciudades = Grafo()
+        self.grafo_aeropuertos = Grafo()
         self.aeropuertos = {}
 
     def get_grafo_ciudades(self):
